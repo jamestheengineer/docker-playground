@@ -3,6 +3,7 @@ psycopg2-binary
 flake8==3.7.7
 pytest 
 pytest-cov
+pytest-django
 djangorestframework
 django-filter
 djangorestframework-jwt
