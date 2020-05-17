@@ -13,6 +13,7 @@ services:
     command: /start.sh
     volumes:
       - .:/code
+      - django-static:/backend/static
     ports:
       - "8000:8000"
     networks:
@@ -36,7 +37,25 @@ services:
       - db
     environment:
       - NODE_ENV=development
+  
+  nginx:
+    image: nginx:alpine
+    build:
+      context: .
+      dockerfile: nginx/dev/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./nginx/dev/dev.conf:/etc/nginx/nginx.conf:ro
+      - django-static:/usr/src/app/static
+    networks:
+      - main
 
 networks:
   main:
     driver: bridge
+
+volumes:
+  django-static:
