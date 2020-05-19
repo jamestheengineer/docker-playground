@@ -7,3 +7,4 @@ pytest-django
 djangorestframework
 django-filter
 djangorestframework-jwt
+gunicorn==19.8

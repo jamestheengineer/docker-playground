@@ -4,16 +4,41 @@ services:
   db:
     container_name: db
     image: postgres
-    environment:
-        POSTGRES_DB: "db"
-        POSTGRES_HOST_AUTH_METHOD: "trust"
+    networks:
+      - main
+
   backend:
     container_name: backend
     build: ./backend
-    command: /start.sh
+    command: /start_prod.sh
     volumes:
       - .:/code
+      - django-static:/backend/static
     ports:
       - "8000:8000"
+    networks:
+      - main
     depends_on:
       - db
+
+  nginx:
+    image: nginx:alpine
+    build:
+      context: .
+      dockerfile: nginx/prod/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./nginx/prod/prod.conf:/etc/nginx/nginx.conf:ro
+      - django-static:/usr/src/app/static
+    networks:
+      - main
+
+networks:
+  main:
+    driver: bridge
+
+volumes:
+  django-static:
