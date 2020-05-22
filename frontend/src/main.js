@@ -4,8 +4,14 @@ import App from './App.vue';
 import './registerServiceWorker';
 import router from './router';
 import store from './store';
+import Loading from 'components/lib/loading'
+import CenterContainer from 'components/lib/center-container'
+
 
 Vue.use(ElementUI);
+
+Vue.component('loading', Loading)
+Vue.component('center-container', CenterContainer)
 
 Vue.config.productionTip = false;
 
