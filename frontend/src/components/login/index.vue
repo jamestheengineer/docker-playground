@@ -1,35 +1,81 @@
 <template>
-  <div>
-    <form class="login" @submit.prevent="login">
-      <h1>Sign in</h1>
-      <label>User name</label>
-      <input required v-model="username" type="text" placeholder="Snoopy"/>
-      <label>Password</label>
-      <input required v-model="password" type="password" placeholder="Password"/>
-      <hr/>
-      <button type="submit">Login</button>
-    </form>
+  <div class="login">
+    <h1>Sign In</h1>
+      <el-alert
+        v-if="badLogin"
+        title="Incorrect username or password"
+        type="error"
+        show-icon>
+      </el-alert>
+    <el-form v-loading="loading">
+      <el-input id="login" v-model="username"></el-input>
+      <el-input id="password" type="password" v-model="password"></el-input>
+      <el-button
+        style="float: right;"
+        type="primary"
+        @click.native.prevent="login"
+        ref="login"
+        id="login-button"
+      >
+        Login
+      </el-button>
+    </el-form>
+    <demo-users @selectUser="changeDemoUser"></demo-users>
   </div>
 </template>
 
 <script>
-  import {AUTH_REQUEST} from 'actions/auth'
+/* eslint-disable */
+  import {AUTH_REQUEST} from '@/store/actions/auth'
+  import { mapGetters } from 'vuex';
+  import DemoUsers from './DemoUsers.vue';
 
   export default {
     name: 'login',
+    components: {
+      DemoUsers,
+    },
     data () {
       return {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: 'password',
       }
     },
     methods: {
+      changeDemoUser(u){
+        console.log('hmm');
+        this.username = u.username;
+        this.password = 'asdfghjkl';
+        document.getElementById('login').click();
+      },
       login: function () {
         const { username, password } = this
         this.$store.dispatch(AUTH_REQUEST, { username, password }).then(() => {
-          this.$router.push('/')
+          this.$router.push('/account')
         })
       }
     },
+    computed: {
+      ...mapGetters(['isAuthenticated', 'authStatus', 'badLogin']),
+      loading: function () {
+        return this.authStatus === 'loading' && !this.isAuthenticated
+      }
+    }
   }
 </script>
+
+<style>
+  .login {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    padding: 10px;
+  }
+  .el-input {
+    margin-bottom: 5px;
+  }
+
+  .el-alert {
+    margin-bottom: 5px;
+  }
+</style>

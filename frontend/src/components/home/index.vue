@@ -1,37 +1,27 @@
 <template>
-  <div>
-    <div v-if="isAuthenticated">
-      <h2>You are now logged in.</h2>
-    </div>
-    <div v-if="!isAuthenticated && authStatus !== 'loading'">
-      <login/>
-    </div>
+  <div class="sq-footer">
+    Verbose Equals True
   </div>
 </template>
 
-<style>
-  .home {
+<style scoped>
+  .sq-footer {
+    background-color: rgb(183, 72, 14);
+    height: 20px;
+    font-size: 12px;
     display: flex;
+    justify-content: flex-end;
+    color: white;
     align-items: center;
-    flex-direction: column;
+    padding-right: 1em;
+  }
+  a {
+    color:white;
   }
 </style>
 
 <script>
-/* eslint-disable */
-  import { mapGetters } from 'vuex';
-  import Login from '@/components/login/index.vue';
-
-  export default {
-    components: {
-      Login,
-    },
-    name: 'home',
-    computed: {
-      ...mapGetters(['isAuthenticated', 'authStatus']),
-      loading: function () {
-        return this.authStatus === 'loading' && !this.isAuthenticated
-      }
-    },
-  }
+export default {
+  name: 'sqreen-footer',
+};
 </script>

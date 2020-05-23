@@ -1,52 +1,87 @@
 <template>
-  <div id="app">
+  <div
+    id="app"
+    :class="{ dark: !getTheme ? true : false }">
     <navigation/>
     <div class="main-container">
       <center-container>
-        <router-view/>
+        <transition
+          name="fade"
+          mode="out-in">
+          <router-view :key="$route.path"/>
+        </transition>
       </center-container>
     </div>
-    <sqreen-footer/>
   </div>
 </template>
 
 <script>
-import Navigation from 'components/navigation'
-import { USER_REQUEST } from 'actions/user'
-import SqreenFooter from './components/footer/index.vue'
+/* eslint-disable max-len */
+import { mapGetters } from 'vuex';
+import Navigation from '@/components/navigation/index.vue';
+import { USER_REQUEST } from '@/store/actions/user';
 
 export default {
-  components: {
-    SqreenFooter,
-    Navigation },
+  components: { Navigation },
   name: 'app',
-  created: function () {
+  computed: {
+    ...mapGetters(['getTheme']),
+  },
+  created() {
     if (this.$store.getters.isAuthenticated) {
-      this.$store.dispatch(USER_REQUEST)
+      this.$store.dispatch(USER_REQUEST);
     }
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+  .main-container {
+    min-height: calc(100vh);
+  }
 
-#nav {
-  padding: 30px;
+  .fade-enter-active,
+  .fade-leave-active {
+    transition-duration: 0.15s;
+    transition-property: opacity;
+    transition-timing-function: ease;
+  }
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  .fade-enter,
+  .fade-leave-active {
+    opacity: 0
+  }
 
-    &.router-link-exact-active {
-      color: #42b983;
+  html {
+    color: white;
+
+  }
+
+  @import './assets/theme-overrides.scss';
+
+  .dark {
+    color: $--color-font-dark;
+    background-color: $--color-background-dark;
+
+    html {
+      background-color:  $--color-background-dark;
+    }
+
+    h1 {
+      color: white;
+    }
+
+    .tech-title {
+      color: $--color-background-dark;
     }
   }
-}
+
+  body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    color: $--color-font;
+    background-color: $--color-background;
+    transition: 1s;
+  }
+
 </style>
