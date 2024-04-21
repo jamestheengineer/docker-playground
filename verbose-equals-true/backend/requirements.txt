@@ -7,6 +7,6 @@ pytest-django
 djangorestframework
 django-filter
 djangorestframework-jwt
-gunicorn==19.8
+gunicorn==22.0.0
 celery
 redis
